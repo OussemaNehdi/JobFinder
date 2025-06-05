@@ -1,15 +1,16 @@
 // src/app/_components/client-user-block.tsx (client component)
-'use client';
+// I used this file in the first version of the app to handle user authentication with Clerk.
+// 'use client';
 
-import { SignInButton, SignOutButton, useUser } from '@clerk/nextjs';
+// import { SignInButton, SignOutButton, useUser } from '@clerk/nextjs';
 
-export function ClientUserBlock() {
-  const { isSignedIn } = useUser();
+// export function ClientUserBlock() {
+//   const { isSignedIn } = useUser();
 
-  return (
-    <>
-      {!isSignedIn && <SignInButton />}
-      {isSignedIn && <SignOutButton />}
-    </>
-  );
-}
+//   return (
+//     <>
+//       {!isSignedIn && <SignInButton />}
+//       {isSignedIn && <SignOutButton />}
+//     </>
+//   );
+// }

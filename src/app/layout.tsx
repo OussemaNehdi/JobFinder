@@ -15,7 +15,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <SidebarMenu />
           <div className="flex-1 flex flex-col">
             <header className="w-full py-6 px-4 flex justify-between items-center shadow-md bg-white/80 backdrop-blur sticky top-0 z-20">
-              {/* You can add a user block or logo here if needed */}
+              
             </header>
             <TRPCReactProvider>
               <main className="flex flex-col items-center justify-center w-full flex-1 px-4 py-8">

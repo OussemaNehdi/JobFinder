@@ -2,7 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
 export const jobRouter = createTRPCRouter({
-  // Search external API
+  //Search external API (I tried using starWars API at first but it is currently down)
   search: publicProcedure
     .input(z.object({ keyword: z.string().min(1) }))
     .query(async ({ input }) => {
@@ -13,7 +13,7 @@ export const jobRouter = createTRPCRouter({
         .filter((job: any) =>
           job.title.toLowerCase().includes(input.keyword.toLowerCase())
         )
-        .slice(0, 10) // only first 10
+        .slice(0, 10) // only first 10 (I used this because the API returns a lot of results)
 
         .map((job: any) => ({
           title: job.title,
@@ -24,7 +24,7 @@ export const jobRouter = createTRPCRouter({
       return results;
     }),
 
-  // Save job
+  //Save job
   save: publicProcedure
     .input(
       z.object({
@@ -37,7 +37,7 @@ export const jobRouter = createTRPCRouter({
       return ctx.db.job.create({ data: input });
     }),
 
-  // Get all saved jobs
+  //Get all saved jobs
   getSaved: publicProcedure.query(async ({ ctx }) => {
     return ctx.db.job.findMany({ orderBy: { createdAt: "desc" } });
   }),
