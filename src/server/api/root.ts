@@ -1,5 +1,5 @@
-import { jobRouter } from "~/server/api/routers/job";
-import { createTRPCRouter } from "~/server/api/trpc";
+import { jobRouter } from "./routers/job";
+import { createTRPCRouter } from "./trpc";
 
 export const appRouter = createTRPCRouter({
   job: jobRouter,
