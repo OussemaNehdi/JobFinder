@@ -13,7 +13,7 @@ export const jobRouter = createTRPCRouter({
         .filter((job: any) =>
           job.title.toLowerCase().includes(input.keyword.toLowerCase())
         )
-        .slice(0, 10) // only first 10 (I used this because the API returns a lot of results)
+        .slice(0, 10) // only first 10 (I used this because the API returns a lot of results).
 
         .map((job: any) => ({
           title: job.title,
