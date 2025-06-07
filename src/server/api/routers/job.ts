@@ -16,7 +16,7 @@ const JobApiResponseSchema = z.object({
   data: z.array(
     z.object({
       title: z.string(),
-      companyName: z.string(),
+      company_name: z.string(), // match API field
       url: z.string(),
     })
   ),
@@ -38,7 +38,7 @@ export const jobRouter = createTRPCRouter({
         .slice(0, 10)
         .map((job) => ({
           title: job.title,
-          companyName: job.companyName,
+          companyName: job.company_name, // map to camelCase
           url: job.url,
         }));
 
