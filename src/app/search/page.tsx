@@ -39,7 +39,7 @@ export default function SearchPage() {
       {error && <p className="text-center text-red-500">Error: {error.message}</p>}
       {jobs && jobs.length > 0 && (
         <ul className="flex flex-col gap-4 mt-4">
-          {jobs.map((job, i) => (
+          {jobs.map((job: any , i: number) => (
             <li key={i} className="bg-white rounded-xl shadow p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-2 border border-gray-100">
               <div>
                 <a href={job.url} target="_blank" rel="noopener noreferrer" className="text-lg font-semibold text-blue-700 hover:underline">
