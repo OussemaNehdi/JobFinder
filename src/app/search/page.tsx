@@ -2,6 +2,13 @@
 import { useState } from "react";
 import { api } from "~/trpc/react";
 
+
+type Job = {
+  title: string;
+  companyName: string;
+  url: string;
+};
+
 export default function SearchPage() {
   const [keyword, setKeyword] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
@@ -39,10 +46,15 @@ export default function SearchPage() {
       {error && <p className="text-center text-red-500">Error: {error.message}</p>}
       {jobs && jobs.length > 0 && (
         <ul className="flex flex-col gap-4 mt-4">
-          {jobs.map((job: any , i: number) => (
+          {(jobs as Job[]).map((job: Job, i: number) => (
             <li key={i} className="bg-white rounded-xl shadow p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-2 border border-gray-100">
               <div>
-                <a href={job.url} target="_blank" rel="noopener noreferrer" className="text-lg font-semibold text-blue-700 hover:underline">
+                <a
+                  href={job.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-lg font-semibold text-blue-700 hover:underline"
+                >
                   {job.title}
                 </a>
                 <div className="text-gray-600 text-sm">{job.companyName}</div>
