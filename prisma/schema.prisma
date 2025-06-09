@@ -11,11 +11,17 @@ datasource db {
 }
 
 model Job {
-  id           Int    @id @default(autoincrement())
+  id           Int      @id @default(autoincrement())
   title        String
   companyName  String
   url          String
   createdAt    DateTime @default(now())
+  users        User[]   @relation("UserJobs")
+}
 
-  //@@index([companyName])
+model User {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+  jobs     Job[]  @relation("UserJobs")
 }

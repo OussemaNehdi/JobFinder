@@ -1,15 +1,13 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-
+import { getServerSession } from "next-auth";
+import { authOptions } from "~/app/api/auth/[...nextauth]/route";
 type Job = {
   title: string;
   companyName: string;
   url: string;
 };
 
-type JobApiResponse = {
-  data: Job[];
-};
 
 // Add a Zod schema for the API response
 const JobApiResponseSchema = z.object({
@@ -23,7 +21,7 @@ const JobApiResponseSchema = z.object({
 });
 
 export const jobRouter = createTRPCRouter({
-  //Search external API (I tried using starWars API at first but it is currently down)
+  // Search external API (I tried using starWars API at first but it is currently down)
   search: publicProcedure
     .input(z.object({ keyword: z.string().min(1) }))
     .query(async ({ input }) => {
@@ -45,7 +43,7 @@ export const jobRouter = createTRPCRouter({
       return results;
     }),
 
-  //Save job
+  // Save job
   save: publicProcedure
     .input(
       z.object({
@@ -55,11 +53,40 @@ export const jobRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      return ctx.db.job.create({ data: input });
+
+      const session = await getServerSession(authOptions);
+      if (!session?.user?.id) throw new Error("Not authenticated");
+
+      // Save the job to the JOB table first (if it is not saved)
+      let job = await ctx.db.job.findFirst({
+        where: { url: input.url },
+      });
+      if (!job) {
+        job = await ctx.db.job.create({ data: input });
+      }
+
+      // Connect job to user
+      await ctx.db.user.update({
+        where: { id: Number(session.user.id) },
+        data: {
+          jobs: {
+            connect: { id: job.id },
+          },
+        },
+      });
+
+
+      return job;
     }),
 
   //Get all saved jobs
   getSaved: publicProcedure.query(async ({ ctx }) => {
-    return ctx.db.job.findMany({ orderBy: { createdAt: "desc" } });
-  }),
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) throw new Error("Not authenticated");
+  const user = await ctx.db.user.findUnique({
+    where: { id: Number(session.user.id) },
+    include: { jobs: { orderBy: { createdAt: "desc" } } },
+  });
+  return user?.jobs ?? [];
+}),
 });

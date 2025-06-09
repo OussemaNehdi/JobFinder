@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { api } from "~/trpc/react";
 
-
 type Job = {
   title: string;
   companyName: string;
@@ -17,6 +16,10 @@ export default function SearchPage() {
     { enabled: !!searchTerm }
   );
   const saveJob = api.job.save.useMutation();
+
+  // Get the current session to check if the user is logged in
+  
+  
 
   return (
     <div className="w-full max-w-2xl mx-auto bg-white/80 rounded-2xl shadow-xl p-8 mt-8 flex flex-col gap-6 border border-gray-200">

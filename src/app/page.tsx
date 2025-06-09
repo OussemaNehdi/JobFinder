@@ -1,13 +1,22 @@
-import Link from "next/link";
+import { getServerSession } from "next-auth";
+import { authOptions } from "./api/auth/[...nextauth]/route";
+import LoginPage from "./login/page";
+import { api } from "~/trpc/react";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const session = await getServerSession(authOptions);
+  
+
   return (
-    <main className="flex flex-col items-center justify-center w-full h-full">
-      <h2 className="text-2xl font-bold mb-4">Welcome!</h2>
-      <p className="text-lg text-gray-700">
-        This app allows you to search job listings from an external API and save
-        your favorites.
-      </p>
+    <main className="flex flex-col items-center justify-center min-h-screen">
+      
+      {!session ? (
+        <LoginPage />
+      ) : (
+        //get the name from the email prefix before the '@'
+        <h1 className="text-2xl font-bold">Welcome {session.user?.email?.split("@")[0]}</h1>
+        
+      )}
     </main>
   );
 }

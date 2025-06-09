@@ -1,6 +1,9 @@
+"use client";
 import Link from "next/link";
 
+
 export default function SidebarMenu() {
+  
   return (
     <aside className="min-h-screen w-full max-w-xs bg-white/80 shadow-lg flex flex-col items-center py-8 px-4 gap-8 sticky top-0 z-30">
       <h1 className="text-3xl font-extrabold text-blue-700 mb-8 tracking-tight drop-shadow">Job Listing App</h1>
