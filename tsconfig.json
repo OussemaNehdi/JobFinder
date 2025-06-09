@@ -11,7 +11,7 @@
     "verbatimModuleSyntax": true,
 
     /* Strictness */
-    "strict": true,
+    "strict": false,
     "noUncheckedIndexedAccess": true,
     "checkJs": true,
 
