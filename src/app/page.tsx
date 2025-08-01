@@ -1,5 +1,5 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]/route";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "~/lib/auth";
 import LoginPage from "./login/page";
 import Link from "next/link";
 

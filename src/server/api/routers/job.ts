@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import { getServerSession } from "next-auth"; //add /next
-import { authOptions } from "~/app/api/auth/[...nextauth]/route";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "~/lib/auth";
 type Job = {
   title: string;
   companyName: string;
