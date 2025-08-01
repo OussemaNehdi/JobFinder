@@ -5,7 +5,21 @@ import { env } from "~/env";
 
 export const authOptions = {
   secret: env.NEXTAUTH_SECRET,
-  session: { strategy: "jwt" as const },
+  session: { 
+    strategy: "jwt" as const,
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
+  cookies: {
+    sessionToken: {
+      name: `${env.NODE_ENV === "production" ? "__Secure-" : ""}next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: env.NODE_ENV === "production",
+      },
+    },
+  },
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -28,8 +42,16 @@ export const authOptions = {
     error: "/login",
   },
   callbacks: {
-    async session({ session, token }:{ session: any; token: any }) {
-      if (token?.sub) session.user = { ...session.user, id: token.sub };
+    async jwt({ token, user }: { token: any; user?: any }) {
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+    async session({ session, token }: { session: any; token: any }) {
+      if (token?.id) {
+        session.user.id = token.id as string;
+      }
       return session;
     },
   },
