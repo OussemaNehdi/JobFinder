@@ -1,8 +1,10 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { db } from "~/server/db";
+import { env } from "~/env";
 
 export const authOptions = {
+  secret: env.NEXTAUTH_SECRET,
   session: { strategy: "jwt" as const },
   providers: [
     CredentialsProvider({
