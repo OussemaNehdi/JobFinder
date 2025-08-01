@@ -3,7 +3,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient(); // For clear presentation, however I could import db from server/db if needed
+
 
 export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt" },
@@ -29,7 +30,7 @@ export const authOptions: NextAuthOptions = {
     error: "/login",
   },
   callbacks: {
-    async session({ session, token }) {
+    async session({ session, token }:{ session: any; token: any }) {
       if (token?.sub) session.user = { ...session.user, id: token.sub };
       return session;
     },

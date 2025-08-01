@@ -1,7 +1,6 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]/route";
 import LoginPage from "./login/page";
-import { api } from "~/trpc/react";
 import Link from "next/link";
 
 export default async function HomePage() {
