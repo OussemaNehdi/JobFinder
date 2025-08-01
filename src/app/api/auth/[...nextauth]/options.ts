@@ -1,11 +1,11 @@
-import NextAuth from "next-auth/next";
+import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { db } from "~/server/db";
 
-// Define auth options inline instead of exporting them
-const authOptions = {
-  session: { strategy: "jwt" as const },
+// Auth options for NextAuth.js
+export const authOptions = {
+  session: { strategy: "jwt" },
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -34,7 +34,3 @@ const authOptions = {
     },
   },
 };
-
-const handler = NextAuth(authOptions);
-
-export { handler as GET, handler as POST };
