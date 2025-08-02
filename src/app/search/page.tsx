@@ -1,14 +1,7 @@
-﻿import { getServerSession } from "next-auth/next";
-import { authOptions } from "~/lib/auth";
-import { redirect } from "next/navigation";
-import SearchClient from "./search-client";
+﻿import SearchClient from "./search-client";
 
-export default async function SearchPage() {
-  const session = await getServerSession(authOptions);
-  
-  if (!session) {
-    redirect("/login");
-  }
-
+export default function SearchPage() {
+  // The middleware handles auth, so we can remove server-side session checks
+  // This prevents double redirects and session sync issues
   return <SearchClient />;
 }

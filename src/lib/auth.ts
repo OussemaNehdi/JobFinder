@@ -31,6 +31,7 @@ export const authOptions = {
     signIn: "/login",
     error: "/login",
   },
+  debug: env.NODE_ENV === "development",
   callbacks: {
     async jwt({ token, user }: { token: any; user?: any }) {
       if (user) {

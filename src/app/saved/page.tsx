@@ -1,14 +1,7 @@
-﻿import { getServerSession } from "next-auth/next";
-import { authOptions } from "~/lib/auth";
-import { redirect } from "next/navigation";
-import SavedClient from "./saved-client";
+﻿import SavedClient from "./saved-client";
 
-export default async function SavedPage() {
-  const session = await getServerSession(authOptions);
-  
-  if (!session) {
-    redirect("/login");
-  }
-
+export default function SavedPage() {
+  // The middleware handles auth, so we can remove server-side session checks
+  // This prevents double redirects and session sync issues
   return <SavedClient />;
 }

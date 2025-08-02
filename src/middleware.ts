@@ -1,17 +1,23 @@
 import { withAuth } from "next-auth/middleware"
 
 export default withAuth(
-  // `withAuth` augments your `Request` with the user's token.
   function middleware(req) {
-    // Add any additional middleware logic here if needed
+    // Middleware logic if needed
   },
   {
     callbacks: {
-      authorized: ({ token }) => !!token
+      authorized: ({ token }) => !!token,
+    },
+    pages: {
+      signIn: "/login",
     },
   }
 )
 
+// Make sure this matcher is very specific
 export const config = {
-  matcher: ["/search/:path*", "/saved/:path*"]
+  matcher: [
+    "/search/:path*", 
+    "/saved/:path*"
+  ]
 }
