@@ -1,25 +1,17 @@
-import { withAuth } from "next-auth/middleware";
+import { withAuth } from "next-auth/middleware"
 
-export default withAuth({
-  pages: {
-    signIn: "/login",
+export default withAuth(
+  // `withAuth` augments your `Request` with the user's token.
+  function middleware(req) {
+    // Add any additional middleware logic here if needed
   },
-  callbacks: {
-    authorized({ token, req }) {
-      // Protect /search and /saved
-      const protectedRoutes = ["/search", "/saved"];
-      const isProtected = protectedRoutes.some((route) =>
-        req.nextUrl.pathname.startsWith(route)
-      );
-      const isLoggedIn = !!token;
-      if (isProtected && !isLoggedIn) {
-        return false;
-      }
-      return true;
+  {
+    callbacks: {
+      authorized: ({ token }) => !!token
     },
-  },
-});
+  }
+)
 
 export const config = {
-  matcher: ["/search/:path*", "/saved/:path*"],
-};
+  matcher: ["/search/:path*", "/saved/:path*"]
+}
