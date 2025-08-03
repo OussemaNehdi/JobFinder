@@ -6,6 +6,17 @@ import { env } from "~/env";
 export const authOptions = {
   secret: env.NEXTAUTH_SECRET,
   trustHost: true, // This is important for Vercel deployments
+  cookies: {
+    sessionToken: {
+      name: `__Secure-next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: true,
+      },
+    },
+  },
   session: { 
     strategy: "jwt" as const,
     maxAge: 30 * 24 * 60 * 60, // 30 days

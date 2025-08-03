@@ -1,16 +1,25 @@
 'use client';
-import { useState } from "react";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import Link from "next/link"; // Add this import
+import { useState, useEffect } from "react";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [loading , setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
+  const { data: session } = useSession();
 
+  // Redirect if already logged in
+  useEffect(() => {
+    if (session) {
+      router.push(callbackUrl);
+    }
+  }, [session, router, callbackUrl]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -20,9 +29,18 @@ export default function LoginPage() {
       email,
       password,
       redirect: false,
+      callbackUrl,
     });
-    if (res?.error) setError(res.error);
-    else router.push("/");
+    
+    if (res?.error) {
+      setError(res.error);
+      setLoading(false);
+    } else if (res?.url) {
+      // Use the URL from the response if available
+      router.push(res.url);
+    } else {
+      router.push(callbackUrl);
+    }
   }
 
   return (

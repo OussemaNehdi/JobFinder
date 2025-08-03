@@ -28,12 +28,12 @@ export default async function HomePage() {
                 </h1>
                 <p className="text-xl text-blue-100 max-w-lg">Ready to find your next opportunity? Start searching for jobs or review your saved listings.</p>
                 <div className="mt-8">
-                  <Link href="/search">
+                  <Link href="/search" prefetch={true}>
                     <button className="bg-white text-blue-700 hover:bg-blue-50 font-semibold py-3 px-6 rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105">
                       Search Jobs
                     </button>
                   </Link>
-                  <Link href="/saved">
+                  <Link href="/saved" prefetch={true}>
                     <button className="ml-4 bg-transparent border-2 border-white text-white hover:bg-white hover:text-blue-700 font-semibold py-3 px-6 rounded-lg transition-all duration-300">
                       Saved Jobs
                     </button>

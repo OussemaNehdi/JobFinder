@@ -1,9 +1,16 @@
 'use client';
 
 import { api } from "~/trpc/react";
+import { useAuthRedirect } from "~/lib/hooks/useAuthRedirect";
 
 export default function SavedClient() {
-  const { data: jobs, isLoading, error } = api.job.getSaved.useQuery();
+  // Use the auth redirect hook to ensure authenticated state is synchronized
+  const { session } = useAuthRedirect(true);
+  
+  const { data: jobs, isLoading, error } = api.job.getSaved.useQuery(
+    undefined,
+    { enabled: !!session }
+  );
 
   return (
     <div className="w-full max-w-2xl mx-auto bg-white/80 rounded-2xl shadow-xl p-8 mt-8 flex flex-col gap-6 border border-gray-200">

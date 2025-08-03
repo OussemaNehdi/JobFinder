@@ -18,10 +18,19 @@ export const env = createEnv({
     NEXTAUTH_URL: z.preprocess(
       // This makes Vercel deployments not fail if you don't set NEXTAUTH_URL
       // Since NextAuth.js automatically uses the VERCEL_URL if present.
-      (str) => process.env.VERCEL_URL ?? str,
+      (str) => {
+        // Handle Vercel deployments properly by adding https protocol
+        if (process.env.VERCEL_URL) {
+          return `https://${process.env.VERCEL_URL}`;
+        }
+        return str;
+      },
       // VERCEL_URL doesn't include `https` so it cant be validated as a URL
       process.env.VERCEL ? z.string() : z.string().url(),
     ),
+    NEXTAUTH_SECURE_COOKIE: z.enum(["true", "false"]).optional(),
+    VERCEL_URL_PROTOCOL: z.enum(["http", "https"]).optional(),
+    API_TIMEOUT: z.string().optional(),
   },
 
   /**
@@ -42,6 +51,9 @@ export const env = createEnv({
     NODE_ENV: process.env.NODE_ENV,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+    NEXTAUTH_SECURE_COOKIE: process.env.NEXTAUTH_SECURE_COOKIE,
+    VERCEL_URL_PROTOCOL: process.env.VERCEL_URL_PROTOCOL,
+    API_TIMEOUT: process.env.API_TIMEOUT,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**

@@ -1,8 +1,12 @@
 import { withAuth } from "next-auth/middleware"
+import { NextResponse } from 'next/server'
 
 export default withAuth(
   function middleware(req) {
-    // Middleware logic if needed
+    // Added to avoid any caching issues with authentication state
+    const response = NextResponse.next()
+    response.headers.set('Cache-Control', 'no-store, max-age=0')
+    return response
   },
   {
     callbacks: {

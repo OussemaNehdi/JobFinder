@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from "react";
 import { api } from "~/trpc/react";
+import { useAuthRedirect } from "~/lib/hooks/useAuthRedirect";
 
 type Job = {
   title: string;
@@ -9,11 +10,14 @@ type Job = {
 };
 
 export default function SearchClient() {
+  // Use the auth redirect hook to ensure authenticated state is synchronized
+  const { session } = useAuthRedirect(true);
+  
   const [keyword, setKeyword] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const { data: jobs, isLoading, error } = api.job.search.useQuery(
     { keyword: searchTerm },
-    { enabled: !!searchTerm }
+    { enabled: !!searchTerm && !!session }
   );
   const saveJob = api.job.save.useMutation();
 
