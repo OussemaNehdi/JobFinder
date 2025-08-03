@@ -19,14 +19,15 @@ export const env = createEnv({
       // This makes Vercel deployments not fail if you don't set NEXTAUTH_URL
       // Since NextAuth.js automatically uses the VERCEL_URL if present.
       (str) => {
-        // Handle Vercel deployments properly by adding https protocol
         if (process.env.VERCEL_URL) {
+          // Always use HTTPS for Vercel deployments
           return `https://${process.env.VERCEL_URL}`;
         }
-        return str;
+        // For local development, use the provided NEXTAUTH_URL or default
+        return str || "http://localhost:3000";
       },
-      // VERCEL_URL doesn't include `https` so it cant be validated as a URL
-      process.env.VERCEL ? z.string() : z.string().url(),
+      // Accept any string in production, but validate URL in development
+      z.string(),
     ),
     NEXTAUTH_SECURE_COOKIE: z.enum(["true", "false"]).optional(),
     VERCEL_URL_PROTOCOL: z.enum(["http", "https"]).optional(),

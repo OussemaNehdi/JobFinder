@@ -3,25 +3,45 @@ import { NextResponse } from 'next/server'
 
 export default withAuth(
   function middleware(req) {
-    // Added to avoid any caching issues with authentication state
+    // Get the pathname from the URL
+    const { pathname } = req.nextUrl
+    
+    // Create the response and add proper caching headers to prevent stale auth state
     const response = NextResponse.next()
-    response.headers.set('Cache-Control', 'no-store, max-age=0')
+    
+    // Ensure authentication state is never cached
+    response.headers.set('Cache-Control', 'no-store, no-cache, max-age=0, must-revalidate')
+    response.headers.set('Pragma', 'no-cache')
+    response.headers.set('Expires', '0')
+    
+    // If in development mode, also set cookies to be secure
+    if (process.env.NODE_ENV === 'production') {
+      response.headers.set('Set-Cookie', 'SameSite=Strict; Secure')
+    }
+    
     return response
   },
   {
     callbacks: {
-      authorized: ({ token }) => !!token,
+      authorized: ({ token }) => {
+        // Only allow authenticated users
+        return !!token
+      },
     },
     pages: {
+      // Customize the sign in page URL
       signIn: "/login",
     },
   }
 )
 
-// Make sure this matcher is very specific
+// Use a more specific matcher to avoid over-protecting routes
 export const config = {
   matcher: [
+    // Protected routes - match exact paths for better performance
+    "/search",
     "/search/:path*", 
+    "/saved",
     "/saved/:path*"
   ]
 }

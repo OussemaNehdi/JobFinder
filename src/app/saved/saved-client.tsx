@@ -1,15 +1,30 @@
 'use client';
 
 import { api } from "~/trpc/react";
-import { useAuthRedirect } from "~/lib/hooks/useAuthRedirect";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function SavedClient() {
-  // Use the auth redirect hook to ensure authenticated state is synchronized
-  const { session } = useAuthRedirect(true);
+  // Get session directly for better reactivity
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  
+  // Redirect if not authenticated
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push(`/login?callbackUrl=${encodeURIComponent("/saved")}`);
+    }
+  }, [status, router]);
   
   const { data: jobs, isLoading, error } = api.job.getSaved.useQuery(
     undefined,
-    { enabled: !!session }
+    { 
+      enabled: !!session,
+      // Retry configuration for better reliability
+      retry: 1,
+      retryDelay: 500 
+    }
   );
 
   return (

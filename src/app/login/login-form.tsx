@@ -1,14 +1,18 @@
-// Make the page Server Component
-import { Suspense } from "react";
-import LoginForm from "./login-form";
+'use client';
+import { useState, useEffect } from "react";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 
-export default function LoginPage() {
-  return (
-    <Suspense fallback={<div className="text-center">Loading...</div>}>
-      <LoginForm />
-    </Suspense>
-  );
-}
+export default function LoginForm() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
+  const { data: session } = useSession();
 
   // Redirect if already logged in
   useEffect(() => {
@@ -58,12 +62,21 @@ export default function LoginPage() {
         className="border px-3 py-2 rounded"
       />
       {error && <div className="text-red-500">{error}</div>}
-      <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">Sign In</button>
-      {loading && <div className="text-gray-500">Signing in...</div>}
+      <button 
+        type="submit" 
+        className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition"
+        disabled={loading}
+      >
+        {loading ? "Signing in..." : "Sign In"}
+      </button>
 
       <div className="text-center">
-        <span className="text-gray-600">Don't have an account? </span>
-        <Link href="/register" className="text-blue-600 hover:underline">Sign up</Link>
+        <p className="text-gray-600 mt-4">
+          Don&apos;t have an account?{" "}
+          <Link href="/register" className="text-blue-500 hover:underline">
+            Register
+          </Link>
+        </p>
       </div>
     </form>
   );

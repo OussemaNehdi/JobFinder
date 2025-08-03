@@ -1,7 +1,9 @@
 'use client';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { api } from "~/trpc/react";
 import { useAuthRedirect } from "~/lib/hooks/useAuthRedirect";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 type Job = {
   title: string;
@@ -10,14 +12,28 @@ type Job = {
 };
 
 export default function SearchClient() {
-  // Use the auth redirect hook to ensure authenticated state is synchronized
-  const { session } = useAuthRedirect(true);
+  // Get session directly for better reactivity
+  const { data: session, status } = useSession();
+  const router = useRouter();
   
   const [keyword, setKeyword] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  
+  // Redirect if not authenticated
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push(`/login?callbackUrl=${encodeURIComponent("/search")}`);
+    }
+  }, [status, router]);
+  
   const { data: jobs, isLoading, error } = api.job.search.useQuery(
     { keyword: searchTerm },
-    { enabled: !!searchTerm && !!session }
+    { 
+      enabled: !!searchTerm && !!session,
+      // Retry configuration for better reliability
+      retry: 1,
+      retryDelay: 500
+    }
   );
   const saveJob = api.job.save.useMutation();
 
