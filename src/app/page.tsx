@@ -28,16 +28,16 @@ export default async function HomePage() {
                 </h1>
                 <p className="text-xl text-blue-100 max-w-lg">Ready to find your next opportunity? Start searching for jobs or review your saved listings.</p>
                 <div className="mt-8">
-                  <Link href="/search" prefetch={true}>
+                  <a href="/search">
                     <button className="bg-white text-blue-700 hover:bg-blue-50 font-semibold py-3 px-6 rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105">
                       Search Jobs
                     </button>
-                  </Link>
-                  <Link href="/saved" prefetch={true}>
+                  </a>
+                  <a href="/saved">
                     <button className="ml-4 bg-transparent border-2 border-white text-white hover:bg-white hover:text-blue-700 font-semibold py-3 px-6 rounded-lg transition-all duration-300">
                       Saved Jobs
                     </button>
-                  </Link>
+                  </a>
                 </div>
               </div>
               <div className="flex-shrink-0">
@@ -62,11 +62,11 @@ export default async function HomePage() {
                 </div>
                 <h2 className="text-2xl font-bold text-gray-800 mb-4">Search Jobs</h2>
                 <p className="text-gray-600 mb-6">Browse through available positions and find your perfect match with our powerful search tools.</p>
-                <Link href="/search">
+                <a href="/search">
                   <button className="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-medium transition-colors duration-200 w-full">
                     Start Searching
                   </button>
-                </Link>
+                </a>
               </div>
             </div>
             
@@ -80,11 +80,11 @@ export default async function HomePage() {
                 <h2 className="text-2xl font-bold text-gray-800 mb-4">Saved Jobs</h2>
                 <p className="text-gray-600 mb-6">Review and manage your saved job listings in one convenient location.</p>
                 <br></br>
-                <Link href="/saved">
+                <a href="/saved">
                   <button className="bg-pink-600 hover:bg-pink-700 text-white py-3 px-6 rounded-lg font-medium transition-colors duration-200 w-full ">
                     View Saved Jobs
                   </button>
-                </Link>
+                </a>
               </div>
             </div>
             
@@ -97,11 +97,11 @@ export default async function HomePage() {
                 </div>
                 <h2 className="text-2xl font-bold text-gray-800 mb-4">About</h2>
                 <p className="text-gray-600 mb-6">Learn more about our job listing platform and how it can help advance your career.</p>
-                <Link href="/about">
+                <a href="/about">
                   <button className="bg-gray-700 hover:bg-gray-800 text-white py-3 px-6 rounded-lg font-medium transition-colors duration-200 w-full">
                     Learn More
                   </button>
-                </Link>
+                </a>
               </div>
             </div>
           </div>

@@ -1,47 +1,47 @@
 import { withAuth } from "next-auth/middleware"
 import { NextResponse } from 'next/server'
 
+/**
+ * Simple middleware to check if the user is authenticated
+ * This approach eliminates the double redirect issue
+ */
 export default withAuth(
   function middleware(req) {
-    // Get the pathname from the URL
-    const { pathname } = req.nextUrl
-    
-    // Create the response and add proper caching headers to prevent stale auth state
+    // Create the response with appropriate headers for authentication
     const response = NextResponse.next()
     
-    // Ensure authentication state is never cached
-    response.headers.set('Cache-Control', 'no-store, no-cache, max-age=0, must-revalidate')
+    // Critical: prevent caching of authenticated pages
+    response.headers.set('Cache-Control', 'private, no-cache, no-store, max-age=0, must-revalidate')
     response.headers.set('Pragma', 'no-cache')
-    response.headers.set('Expires', '0')
+    response.headers.set('Expires', '-1')
     
-    // If in development mode, also set cookies to be secure
+    // Ensure cookies are transmitted correctly
     if (process.env.NODE_ENV === 'production') {
-      response.headers.set('Set-Cookie', 'SameSite=Strict; Secure')
+      // In production, make sure cookies are secure
+      response.headers.set('Set-Cookie', 'SameSite=Lax; Secure; Path=/');
     }
     
     return response
   },
   {
     callbacks: {
+      // The core fix - this function gets the token from the session
       authorized: ({ token }) => {
-        // Only allow authenticated users
+        // Return true if the user has a valid token
         return !!token
       },
     },
+    // When not authorized, redirect to the login page
     pages: {
-      // Customize the sign in page URL
       signIn: "/login",
     },
   }
 )
 
-// Use a more specific matcher to avoid over-protecting routes
+// For NextAuth middleware, simplify matchers to avoid issues
 export const config = {
   matcher: [
-    // Protected routes - match exact paths for better performance
-    "/search",
-    "/search/:path*", 
-    "/saved",
-    "/saved/:path*"
+    "/search", 
+    "/saved"
   ]
 }

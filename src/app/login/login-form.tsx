@@ -17,7 +17,12 @@ export default function LoginForm() {
   // Redirect if already logged in
   useEffect(() => {
     if (session) {
-      router.push(callbackUrl);
+      // Force hard navigation for callback URLs to ensure proper authentication
+      if (callbackUrl && (callbackUrl === '/search' || callbackUrl === '/saved')) {
+        window.location.href = callbackUrl;
+      } else {
+        router.push(callbackUrl);
+      }
     }
   }, [session, router, callbackUrl]);
 
@@ -35,11 +40,15 @@ export default function LoginForm() {
     if (res?.error) {
       setError(res.error);
       setLoading(false);
-    } else if (res?.url) {
-      // Use the URL from the response if available
-      router.push(res.url);
     } else {
-      router.push(callbackUrl);
+      // Force hard navigation for protected routes to ensure proper authentication
+      if (callbackUrl === '/search' || callbackUrl === '/saved') {
+        window.location.href = callbackUrl;
+      } else if (res?.url) {
+        router.push(res.url);
+      } else {
+        router.push(callbackUrl);
+      }
     }
   }
 
