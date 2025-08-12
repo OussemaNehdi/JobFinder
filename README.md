@@ -1,5 +1,5 @@
 #Website
-jobsfinderr.vercel.app/
+https://jobsfinderr.vercel.app/
 
 # Create T3 App
 
